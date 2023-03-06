@@ -71,7 +71,46 @@ class MainApp extends StatelessWidget {
             SizedBox(
               height: 7,
             ),
-            TextField(),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 25, 0, 25),
+              height: 24,
+              width: 240,
+              child: TextField(
+                cursorColor: erieBlack,
+                cursorHeight: 20,
+                onTapOutside: (event) {
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+                  if (!currentFocus.hasPrimaryFocus &&
+                      currentFocus.focusedChild != null) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  }
+                },
+                decoration: InputDecoration(
+                  isDense: true,
+                  fillColor: Color(0xFFCCCCCC),
+                  contentPadding: EdgeInsets.zero,
+                  filled: true,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(20),
+                      right: Radius.circular(20),
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(20),
+                      right: Radius.circular(20),
+                    ),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -84,25 +123,62 @@ class MainApp extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => Pokemon()),
                       );
                     },
-                    child: Container(
-                      child: Stack(
-                        children: [
-                          Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: Text('#001'),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
                                 ),
-                                Text(
-                                  names[index],
-                                ),
-                                Row(
-                                  children: [],
-                                ),
-                              ],
+                                color: erieBlack,
+                              ),
+                              height: 140,
+                              width: 270,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          28, 18, 0, 0),
+                                      child: Text(
+                                        '#001',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Roboto',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(35, 13, 0, 0),
+                                    child: Text(
+                                      names[index],
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Roboto',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 30,
+                              child: Image.asset('images/bulbasaur.png'),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -129,6 +205,7 @@ class FilterButton extends StatelessWidget {
       icon: icon2,
       onPressed: () {
         showDialog(
+          barrierColor: Colors.transparent,
           context: context,
           builder: (context) {
             return FilterBox();
@@ -151,81 +228,159 @@ class FilterBox extends StatefulWidget {
 class _FilterBoxState extends State<FilterBox> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 66),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text('Filters'),
-          Container(
-            height: 30,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: filters.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Material(
-                  child: FilterChip(
-                      selected: filtersSelected[index],
-                      label: Text(filters[index]),
-                      onSelected: (bool selected) {
-                        setState(() {
-                          filtersSelected[index] = selected;
-                        });
-                      }),
-                );
-              },
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 76, 10, 30),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          decoration: BoxDecoration(
+            color: isabelline,
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
             ),
+            boxShadow: kElevationToShadow[3],
           ),
-          Text('Regions'),
-          Container(
-            height: 30,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: regions.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Material(
-                  child: FilterChip(
-                      selected: regionsSelected[index],
-                      label: Text(regions[index]),
-                      onSelected: (bool selected) {
-                        setState(() {
-                          regionsSelected[index] = selected;
-                        });
-                      }),
-                );
-              },
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 13, 0, 13),
+                child: Text(
+                  'Filters',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Container(
+                height: 30,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: filters.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Material(
+                      child: FilterChip(
+                          selected: filtersSelected[index],
+                          label: Text(filters[index]),
+                          onSelected: (bool selected) {
+                            setState(() {
+                              filtersSelected[index] = selected;
+                            });
+                          }),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 13, 0, 13),
+                child: Text(
+                  'Regions',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Container(
+                height: 30,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: regions.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Material(
+                      color: isabelline,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: FilterChip(
+                            selectedColor: Color(0xFF5FBD58),
+                            showCheckmark: false,
+                            selected: regionsSelected[index],
+                            label: Text(regions[index]),
+                            onSelected: (bool selected) {
+                              setState(() {
+                                regionsSelected[index] = selected;
+                              });
+                            }),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 13, 0, 13),
+                child: Text(
+                  'Types',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Container(
+                height: 30,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: types.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Material(
+                      color: isabelline,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: FilterChip(
+                            selectedColor: Color(0xFF5FBD58),
+                            showCheckmark: false,
+                            selected: typesSelected[index],
+                            label: Text(types[index]),
+                            onSelected: (bool selected) {
+                              setState(() {
+                                typesSelected[index] = selected;
+                              });
+                            }),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Center(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(20),
+                          right: Radius.circular(20),
+                        ),
+                        color: Color(0xFFEF3E33),
+                      ),
+                      child: Text(
+                        'Apply',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Roboto',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-          Text('Types'),
-          Container(
-            height: 30,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: types.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Material(
-                  child: FilterChip(
-                      selected: typesSelected[index],
-                      label: Text(types[index]),
-                      onSelected: (bool selected) {
-                        setState(() {
-                          typesSelected[index] = selected;
-                        });
-                      }),
-                );
-              },
-            ),
-          ),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              child: Text('Apply'),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
