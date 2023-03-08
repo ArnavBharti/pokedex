@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.pokedex">
+    package="dev.hashnode.arnavbharti01.pokedex">
    <application
         android:label="pokedex"
         android:name="${applicationName}"
