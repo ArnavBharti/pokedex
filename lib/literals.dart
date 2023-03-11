@@ -28,15 +28,16 @@ var pokemonCardWidth = 270.0;
 var pokemonNumberFontWeight = FontWeight.w400;
 var pokemonNumberFontStyle = 14.0;
 var pokemonNameFontSize = 20.0;
+var heightSizedBoxAppBarSeparator = 7.0;
 var pokemonNameFontWeight = FontWeight.w500;
+var numberOfPokemons = 151;
 
 // Strings
 const pokemonListTitle = 'Pokedex';
 var appBarTitleFontFamily = 'Roboto';
 var notificationBadgeFontFamily = 'Roboto';
-
-// Icons
-var filterIcon = const Icon(Icons.filter_list);
+var pokemonNumberFontFamily = 'Roboto';
+var pokemonNameFontFamily = 'Roboto';
 
 // Temporary Testing Literals
 var evolutions = [

@@ -77,10 +77,11 @@ BorderRadius allCircularRoundBorder(double radius) {
 
 TextStyle pokemonNumberTextStyle() {
   return TextStyle(
-      color: white,
-      fontFamily: 'Roboto',
-      fontSize: pokemonNumberFontStyle,
-      fontWeight: pokemonNumberFontWeight);
+    color: white,
+    fontFamily: 'Roboto',
+    fontSize: pokemonNumberFontStyle,
+    fontWeight: pokemonNumberFontWeight,
+  );
 }
 
 TextStyle pokemonNameTextStyle() {
@@ -124,25 +125,5 @@ TextStyle filterChipTextStyle() {
   );
 }
 
-var boxDecoration = BoxDecoration(
-    borderRadius: const BorderRadius.all(Radius.circular(20)),
-    color: isabelline,
-    boxShadow: kElevationToShadow[2]);
 
-var titleTextStyle = const TextStyle(
-  fontFamily: 'Roboto',
-  fontWeight: FontWeight.w700,
-  fontSize: 24,
-);
 
-var subtitleInfoTextStyle = const TextStyle(
-  fontFamily: 'Roboto',
-  fontSize: 18,
-  fontWeight: FontWeight.w500,
-);
-
-var normalTextStyle18 = const TextStyle(
-  fontFamily: 'Roboto',
-  fontSize: 18,
-  fontWeight: FontWeight.w400,
-);

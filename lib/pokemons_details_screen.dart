@@ -1,27 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/widgets.dart';
+import 'package:pokedex/main.dart';
+import 'package:pokedex/pokeapi.dart';
 import 'literals.dart';
-import 'themes_and_styles.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class Pokemon extends StatefulWidget {
-  const Pokemon({super.key});
+class PokemonDetails extends StatefulWidget {
+  const PokemonDetails({super.key});
 
   @override
-  State<Pokemon> createState() => _PokemonState();
+  State<PokemonDetails> createState() => _PokemonDetailsState();
 }
 
-class _PokemonState extends State<Pokemon> {
+class _PokemonDetailsState extends State<PokemonDetails> {
   @override
   Widget build(BuildContext context) {
+    var boxDecoration = BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        color: isabelline,
+        boxShadow: kElevationToShadow[2]);
+
+    var titleTextStyle = const TextStyle(
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w700,
+      fontSize: 24,
+    );
+
+    var subtitleInfoTextStyle = const TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+    );
+
+    var normalTextStyle18 = const TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+    );
+
     return Scaffold(
-      appBar: appBar('Bulbasaur'),
+      appBar: appBar(context),
       backgroundColor: isabelline,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(
-            height: 7,
+          SizedBox(
+            height: heightSizedBoxAppBarSeparator,
           ),
           Expanded(
             child: ListView(
@@ -64,14 +87,6 @@ class _PokemonState extends State<Pokemon> {
                           ),
                           child: const Padding(
                             padding: EdgeInsets.all(3.0),
-                            child: Text(
-                              '#001',
-                              style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
                           ),
                         ),
                       )

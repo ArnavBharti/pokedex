@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.hashnode.arnavbharti01.pokedex">
+    <!-- Required to fetch data from the internet. -->
+<uses-permission android:name="android.permission.INTERNET" />
+
    <application
         android:label="pokedex"
         android:name="${applicationName}"
