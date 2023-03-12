@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/poke_data.dart';
-import 'package:pokedex/pokeapi.dart';
 import 'package:pokedex/pokemon_list_screen.dart';
 import 'filter_box.dart';
 import 'literals.dart';
@@ -9,20 +7,8 @@ void main() {
   runApp(const PokedexApp());
 }
 
-class PokedexApp extends StatefulWidget {
+class PokedexApp extends StatelessWidget {
   const PokedexApp({super.key});
-
-  @override
-  State<PokedexApp> createState() => _PokedexAppState();
-}
-
-class _PokedexAppState extends State<PokedexApp> {
-
-  @override
-  void initState() {
-    super.initState();
-    createPokeList();
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/themes_and_styles.dart';
-import 'package:pokedex/widgets.dart';
-
 import 'literals.dart';
 
 class FilterBox extends StatefulWidget {
@@ -14,6 +11,31 @@ class FilterBox extends StatefulWidget {
 }
 
 class _FilterBoxState extends State<FilterBox> {
+  TextStyle subtitleTextStyle() {
+    return const TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      color: Colors.black,
+    );
+  }
+
+  RoundedRectangleBorder filterChipShape() {
+    return const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(4.0),
+      ),
+    );
+  }
+
+  TextStyle filterChipTextStyle() {
+    return const TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 16,
+      fontWeight: FontWeight.w300,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,15 +43,25 @@ class _FilterBoxState extends State<FilterBox> {
       child: Align(
         alignment: Alignment.topCenter,
         child: Container(
-          decoration: filterCardBoxDecoration(),
+          decoration: BoxDecoration(
+            color: isabelline,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(20.0),
+            ),
+            boxShadow: kElevationToShadow[4],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 13.0),
-                child: FilterCardHeading(
-                  heading: 'Filters',
+              Padding(
+                padding: const EdgeInsets.only(top: 13.0),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 13),
+                  child: Text(
+                    'Filters',
+                    style: subtitleTextStyle(),
+                  ),
                 ),
               ),
               Padding(
@@ -69,8 +101,12 @@ class _FilterBoxState extends State<FilterBox> {
                   ),
                 ),
               ),
-              const FilterCardHeading(
-                heading: 'Regions',
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 0, 13),
+                child: Text(
+                  'Regions',
+                  style: subtitleTextStyle(),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 13.0),
@@ -109,8 +145,12 @@ class _FilterBoxState extends State<FilterBox> {
                   ),
                 ),
               ),
-              const FilterCardHeading(
-                heading: 'Types',
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 0, 13),
+                child: Text(
+                  'Types',
+                  style: subtitleTextStyle(),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 13.0),
@@ -160,8 +200,8 @@ class _FilterBoxState extends State<FilterBox> {
                 child: GestureDetector(
                   onTap: () {},
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(16, 3, 16, 3),
-                    margin: EdgeInsets.fromLTRB(0, 15, 0, 16),
+                    padding: const EdgeInsets.fromLTRB(16, 3, 16, 3),
+                    margin: const EdgeInsets.fromLTRB(0, 15, 0, 16),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.horizontal(
                         left: Radius.circular(20),

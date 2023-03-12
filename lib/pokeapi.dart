@@ -1,29 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<Map<int, Pokemon>> getPokemon(int pokeID) async {
-  final pokeList =
-      await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/?limit=151'));
-
-  if (pokeList.statusCode == 200) {
-    // return Map.fromIterable(
-    //   jsonDecode(pokeList.body)['results'],
-    //   key: (e) => e['name'],
-    //   value: (e) => fetchPokemon(e['url']),
-    // );
-    for (int i = 1; i <= 151; i++) {
-      fetchPokemon(i).then((value) {
-        pokemonList[i] = value;
-      });
-    }
-  } else {
-    throw Exception('Failed to load Pokemon');
-  }
-}
-
-Future<Pokemon> fetchPokemon(int pokeID) async {
-  final response =
-      await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$pokeID'));
+Future<Pokemon> fetchPokemon(int Id) async {
+  final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$Id/'));
 
   if (response.statusCode == 200) {
     return Pokemon.fromJson(jsonDecode(response.body));

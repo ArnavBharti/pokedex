@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/pokeapi.dart';
 import 'literals.dart';
 import 'pokemons_details_screen.dart';
 
-class PokemonListScreen extends StatelessWidget {
+class PokemonListScreen extends StatefulWidget {
   const PokemonListScreen({
     super.key,
   });
+
+  @override
+  State<PokemonListScreen> createState() => _PokemonListScreenState();
+}
+
+class _PokemonListScreenState extends State<PokemonListScreen> {
+  late Future<Pokemon> futurePokemon;
+
+  
 
   @override
   Widget build(BuildContext context) {
