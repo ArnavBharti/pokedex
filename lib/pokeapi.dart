@@ -1,13 +1,39 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<Pokemon> fetchPokemon(int Id) async {
-  final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$Id/'));
+Future<Pokemon> fetchPokemon(int id) async {
+  final response =
+      await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$id/'));
 
   if (response.statusCode == 200) {
     return Pokemon.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to load Pokemon');
+  }
+}
+
+Future<PokemonSpecies> fetchPokemonSpecies(int id) async {
+  final response = await http
+      .get(Uri.parse('https://pokeapi.co/api/v2/pokemon-species/$id/'));
+
+  if (response.statusCode == 200) {
+    return PokemonSpecies.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to load Pokemon');
+  }
+}
+
+class PokemonSpecies {
+  final int captureRate;
+
+  const PokemonSpecies({
+    required this.captureRate,
+  });
+  
+  factory PokemonSpecies.fromJson(Map<String, dynamic> json) {
+    return PokemonSpecies(
+      captureRate: json['capture_rate'],
+    );
   }
 }
 

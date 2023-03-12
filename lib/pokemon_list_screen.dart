@@ -3,19 +3,10 @@ import 'package:pokedex/pokeapi.dart';
 import 'literals.dart';
 import 'pokemons_details_screen.dart';
 
-class PokemonListScreen extends StatefulWidget {
+class PokemonListScreen extends StatelessWidget {
   const PokemonListScreen({
     super.key,
   });
-
-  @override
-  State<PokemonListScreen> createState() => _PokemonListScreenState();
-}
-
-class _PokemonListScreenState extends State<PokemonListScreen> {
-  late Future<Pokemon> futurePokemon;
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +58,17 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: numberOfPokemons,
+            itemCount: 10, // LENGTH OF LIST
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PokemonDetails()),
+                      builder: (context) => PokemonDetails(
+                        pokemonID: index,
+                      ),
+                    ),
                   );
                 },
                 child: Stack(
@@ -96,26 +90,24 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(28, 18, 0, 0),
                             child: Text(
-                              '#001',
+                              nameGenerator(1),
                               style: TextStyle(
                                 color: white,
                                 fontFamily: pokemonNumberFontFamily,
                                 fontSize: pokemonNumberFontStyle,
                                 fontWeight: pokemonNumberFontWeight,
                               ),
-                            ),
+                            ), // GENERATING NAMES
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(35, 13, 0, 0),
-                            child: Text(
-                              names[index],
-                              style: TextStyle(
-                                color: white,
-                                fontFamily: pokemonNameFontFamily,
-                                fontSize: pokemonNameFontSize,
-                                fontWeight: pokemonNameFontWeight,
-                              ),
-                            ),
+                            child: Text('Bulbasaur',
+                                style: TextStyle(
+                                  color: white,
+                                  fontFamily: pokemonNameFontFamily,
+                                  fontSize: pokemonNameFontSize,
+                                  fontWeight: pokemonNameFontWeight,
+                                )),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -138,4 +130,41 @@ class _PokemonListScreenState extends State<PokemonListScreen> {
       ],
     );
   }
+
+//   FutureBuilder<Pokemon> generateName(int index) {
+  FutureBuilder<Pokemon> generateName(int index) {
+    print(index);
+    late Future<Pokemon>? futurePokemon;
+    futurePokemon = fetchPokemon(index);
+
+    return FutureBuilder<Pokemon>(
+      future: futurePokemon,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Text(snapshot.data!.pokeName,
+              style: TextStyle(
+                color: white,
+                fontFamily: pokemonNameFontFamily,
+                fontSize: pokemonNameFontSize,
+                fontWeight: pokemonNameFontWeight,
+              ));
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        // By default, show a loading spinner.
+        return const CircularProgressIndicator();
+      },
+    );
+  }
+}
+
+String nameGenerator(int index) {
+  var name = '#001';
+  // print('index' + index.toString());
+  // late Future<Pokemon> futurePokemon;
+  // futurePokemon = fetchPokemon(index);
+  // print('Success');
+  // futurePokemon.then((value) => print(value.pokeName));
+  return name;
 }

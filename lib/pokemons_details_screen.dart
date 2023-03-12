@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/main.dart';
 import 'package:pokedex/pokeapi.dart';
 import 'literals.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class PokemonDetails extends StatefulWidget {
-  const PokemonDetails({super.key});
+  const PokemonDetails({super.key, required this.pokemonID});
+  final int pokemonID;
 
   @override
   State<PokemonDetails> createState() => _PokemonDetailsState();
 }
 
 class _PokemonDetailsState extends State<PokemonDetails> {
+  late Future<Pokemon>? futurePokemon;
+  late Future<PokemonSpecies>? futurePokemonSpecies;
+
+  @override
+  void initState() {
+    super.initState();
+    futurePokemon = fetchPokemon(widget.pokemonID + 1);
+    futurePokemonSpecies = fetchPokemonSpecies(widget.pokemonID + 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     var boxDecoration = BoxDecoration(
@@ -38,7 +48,7 @@ class _PokemonDetailsState extends State<PokemonDetails> {
     );
 
     return Scaffold(
-      appBar: appBar(context),
+      appBar: appBarDetailsScreen(context),
       backgroundColor: isabelline,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -261,48 +271,288 @@ class _PokemonDetailsState extends State<PokemonDetails> {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: const [
-                                  statsCircularPercentIndicator(
-                                    progressColor: Color(0xFF14CC60),
-                                    percentage: 45,
-                                    title: 'HP',
+                                children: [
+                                  FutureBuilder<Pokemon>(
+                                    future: futurePokemon,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return CircularPercentIndicator(
+                                          backgroundColor: erieBlack,
+                                          progressColor:
+                                              const Color(0xFF14CC60),
+                                          lineWidth: 7,
+                                          radius: 40,
+                                          startAngle: 180,
+                                          percent:
+                                              (snapshot.data?.pokeHP ?? 0) /
+                                                  (714),
+                                          center: Text(
+                                            snapshot.data!.pokeHP.toString(),
+                                            style: const TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFF14CC60),
+                                            ),
+                                          ),
+                                          footer: const Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              'HP',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text('${snapshot.error}');
+                                      }
+
+                                      // By default, show a loading spinner.
+                                      return const CircularProgressIndicator();
+                                    },
                                   ),
-                                  statsCircularPercentIndicator(
-                                    progressColor: Color(0xFFE4C811),
-                                    percentage: 45,
-                                    title: 'HP',
+                                  FutureBuilder<Pokemon>(
+                                    future: futurePokemon,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return CircularPercentIndicator(
+                                          backgroundColor: erieBlack,
+                                          progressColor:
+                                              const Color(0xFFE4C811),
+                                          lineWidth: 7,
+                                          radius: 40,
+                                          startAngle: 180,
+                                          percent:
+                                              (snapshot.data?.pokeHP ?? 0) /
+                                                  (504),
+                                          center: Text(
+                                            snapshot.data!.pokeSpeed.toString(),
+                                            style: const TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFFE4C811),
+                                            ),
+                                          ),
+                                          footer: const Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              'Speed',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text('${snapshot.error}');
+                                      }
+
+                                      // By default, show a loading spinner.
+                                      return const CircularProgressIndicator();
+                                    },
                                   ),
                                 ],
                               ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: const [
-                                  statsCircularPercentIndicator(
-                                    progressColor: Color(0xFFEF3E33),
-                                    percentage: 49,
-                                    title: 'Attack',
+                                children: [
+                                  FutureBuilder<Pokemon>(
+                                    future: futurePokemon,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return CircularPercentIndicator(
+                                          backgroundColor: erieBlack,
+                                          progressColor:
+                                              const Color(0xFFEF3E33),
+                                          lineWidth: 7,
+                                          radius: 40,
+                                          startAngle: 180,
+                                          percent:
+                                              (snapshot.data?.pokeAttack ?? 0) /
+                                                  (504),
+                                          center: Text(
+                                            snapshot.data!.pokeAttack
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFFEF3E33),
+                                            ),
+                                          ),
+                                          footer: const Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              'Attack',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text('${snapshot.error}');
+                                      }
+
+                                      // By default, show a loading spinner.
+                                      return const CircularProgressIndicator();
+                                    },
                                   ),
-                                  statsCircularPercentIndicator(
-                                    progressColor: Color(0xFF004E98),
-                                    percentage: 49,
-                                    title: 'Defense',
+                                  FutureBuilder<Pokemon>(
+                                    future: futurePokemon,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return CircularPercentIndicator(
+                                          backgroundColor: erieBlack,
+                                          progressColor:
+                                              const Color(0xFF004E98),
+                                          lineWidth: 7,
+                                          radius: 40,
+                                          startAngle: 180,
+                                          percent:
+                                              (snapshot.data!.pokeDefense) /
+                                                  (614),
+                                          center: Text(
+                                            snapshot.data!.pokeDefense
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFF004E98),
+                                            ),
+                                          ),
+                                          footer: const Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              'Defense',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text('${snapshot.error}');
+                                      }
+
+                                      // By default, show a loading spinner.
+                                      return const CircularProgressIndicator();
+                                    },
                                   ),
                                 ],
                               ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: const [
-                                  statsCircularPercentIndicator(
-                                    progressColor: Color(0xFFC589E8),
-                                    percentage: 60,
-                                    title: 'Special\nAttack',
+                                children: [
+                                  FutureBuilder<Pokemon>(
+                                    future: futurePokemon,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return CircularPercentIndicator(
+                                          backgroundColor: erieBlack,
+                                          progressColor:
+                                              const Color(0xFFC589E8),
+                                          lineWidth: 7,
+                                          radius: 40,
+                                          startAngle: 180,
+                                          percent: (snapshot.data
+                                                      ?.pokeSpecialAttack ??
+                                                  0) /
+                                              (504),
+                                          center: Text(
+                                            snapshot.data!.pokeSpecialAttack
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFFC589E8),
+                                            ),
+                                          ),
+                                          footer: const Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              'Special\nAttack',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text('${snapshot.error}');
+                                      }
+
+                                      // By default, show a loading spinner.
+                                      return const CircularProgressIndicator();
+                                    },
                                   ),
-                                  statsCircularPercentIndicator(
-                                    progressColor: Color(0xFF2589BD),
-                                    percentage: 60,
-                                    title: 'Special\nDefense',
+                                  FutureBuilder<Pokemon>(
+                                    future: futurePokemon,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return CircularPercentIndicator(
+                                          backgroundColor: erieBlack,
+                                          progressColor:
+                                              const Color(0xFF2589BD),
+                                          lineWidth: 7,
+                                          radius: 40,
+                                          startAngle: 180,
+                                          percent: (snapshot.data
+                                                      ?.pokeSpecialDefense ??
+                                                  0) /
+                                              (614),
+                                          center: Text(
+                                            snapshot.data!.pokeSpecialDefense
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFF2589BD),
+                                            ),
+                                          ),
+                                          footer: const Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              'Special\nDefense',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text('${snapshot.error}');
+                                      }
+
+                                      // By default, show a loading spinner.
+                                      return const CircularProgressIndicator();
+                                    },
                                   ),
                                 ],
                               ),
@@ -416,21 +666,35 @@ class _PokemonDetailsState extends State<PokemonDetails> {
                         Padding(
                           padding:
                               const EdgeInsets.only(bottom: 35.0, top: 25.0),
-                          child: CircularPercentIndicator(
-                            radius: 60.0,
-                            startAngle: 180,
-                            percent: 0.18,
-                            lineWidth: 10,
-                            backgroundColor: erieBlack,
-                            progressColor: captureRateColor,
-                            center: const Text(
-                              '18%',
-                              style: TextStyle(
-                                  color: captureRateColor,
-                                  fontFamily: 'Roboto',
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w700),
-                            ),
+                          child: FutureBuilder<PokemonSpecies>(
+                            future: futurePokemonSpecies,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return CircularPercentIndicator(
+                                  backgroundColor: erieBlack,
+                                  progressColor: captureRateColor,
+                                  lineWidth: 10,
+                                  radius: 60.0,
+                                  startAngle: 180,
+                                  percent:
+                                      (snapshot.data?.captureRate ?? 0) / (255),
+                                  center: Text(
+                                    '${((snapshot.data?.captureRate ?? 0) / (255) * 100).toStringAsFixed(2)}%',
+                                    style: const TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700,
+                                      color: captureRateColor,
+                                    ),
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('${snapshot.error}');
+                              }
+
+                              // By default, show a loading spinner.
+                              return const CircularProgressIndicator();
+                            },
                           ),
                         )
                       ],
@@ -444,50 +708,58 @@ class _PokemonDetailsState extends State<PokemonDetails> {
       ),
     );
   }
-}
 
-class statsCircularPercentIndicator extends StatelessWidget {
-  const statsCircularPercentIndicator({
-    super.key,
-    required this.progressColor,
-    required this.percentage,
-    required this.title,
-  });
-
-  final Color progressColor;
-  final int percentage;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return CircularPercentIndicator(
-      backgroundColor: erieBlack,
-      progressColor: progressColor,
-      lineWidth: 7,
-      radius: 40,
-      startAngle: 180,
-      percent: percentage / 100,
-      center: Text(
-        percentage.toString(),
-        style: TextStyle(
-          fontFamily: 'Roboto',
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-          color: progressColor,
+  AppBar appBarDetailsScreen(BuildContext context) {
+    return AppBar(
+      centerTitle: true,
+      backgroundColor: isabelline,
+      toolbarHeight: appBarToolbarHeight,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(appBarShapeRadius),
+          bottomRight: Radius.circular(appBarShapeRadius),
         ),
       ),
-      footer: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
+      title: FutureBuilder<Pokemon>(
+        future: futurePokemon,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(snapshot.data!.pokeName.capitalize(),
+                style: TextStyle(
+                  color: black,
+                  fontSize: appBarTitleFontSize,
+                  fontWeight: appBarTitleFontWeight,
+                  fontFamily: appBarTitleFontFamily,
+                ));
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+
+          // By default, show a loading spinner.
+          return const CircularProgressIndicator();
+        },
+      ),
+      leading: Align(
+        alignment: Alignment.center,
+        child: Container(
+          padding: EdgeInsets.zero,
+          height: appBarLeaderSize,
+          width: appBarLeaderSize,
+          child: IconButton(
+            color: black,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ),
       ),
     );
+  }
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
   }
 }
