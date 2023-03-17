@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/pokeapi.dart';
+import 'package:pokedex/pokemon_list_screen.dart';
 import 'literals.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -14,12 +15,14 @@ class PokemonDetails extends StatefulWidget {
 class _PokemonDetailsState extends State<PokemonDetails> {
   late Future<Pokemon>? futurePokemon;
   late Future<PokemonSpecies>? futurePokemonSpecies;
+  late Future<PokemonEvo>? futurePokemonEvo;
 
   @override
   void initState() {
     super.initState();
     futurePokemon = fetchPokemon(widget.pokemonID + 1);
     futurePokemonSpecies = fetchPokemonSpecies(widget.pokemonID + 1);
+    futurePokemonEvo = fetchPokemonEvo(widget.pokemonID + 1);
   }
 
   @override
@@ -76,12 +79,28 @@ class _PokemonDetailsState extends State<PokemonDetails> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      Positioned(
-                        bottom: 10,
-                        child: Image.asset(
-                          'images/bulbasaur.png',
-                          scale: 0.7,
-                        ),
+                      FutureBuilder(
+                        future: futurePokemon,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Positioned(
+                              bottom: -50,
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  width: 300.0,
+                                  child: Image.network(
+                                    snapshot.data?.sprite ?? '',
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return const Text('Error');
+                          }
+                          return const CircularProgressIndicator();
+                        },
                       ),
                       Positioned(
                         top: 40,
@@ -90,13 +109,21 @@ class _PokemonDetailsState extends State<PokemonDetails> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: Colors.white,
+                              color: white,
                               width: 2,
                             ),
                             color: const Color.fromRGBO(30, 30, 30, 0.57),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(3.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Text(
+                              generateNumber(widget.pokemonID + 1),
+                              style: const TextStyle(
+                                color: white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
                       )
@@ -117,14 +144,24 @@ class _PokemonDetailsState extends State<PokemonDetails> {
                             style: titleTextStyle,
                           ),
                         ),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-                          child: Text(
-                            'A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.',
-                            style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400),
+                          child: FutureBuilder(
+                            future: futurePokemonSpecies,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  snapshot.data?.flavorText ?? '',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('${snapshot.error}');
+                              }
+                              return const CircularProgressIndicator();
+                            },
                           ),
                         )
                       ],
@@ -173,17 +210,41 @@ class _PokemonDetailsState extends State<PokemonDetails> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Expanded(
-                                child: Text(
-                                  '0.7 m',
-                                  style: normalTextStyle18,
-                                  textAlign: TextAlign.center,
+                                child: FutureBuilder<Pokemon>(
+                                  future: futurePokemon,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(
+                                        '${snapshot.data!.height / 10} m',
+                                        style: normalTextStyle18,
+                                        textAlign: TextAlign.center,
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Text('${snapshot.error}');
+                                    }
+
+                                    // By default, show a loading spinner.
+                                    return const CircularProgressIndicator();
+                                  },
                                 ),
                               ),
                               Expanded(
-                                child: Text(
-                                  '6.9 kg',
-                                  style: normalTextStyle18,
-                                  textAlign: TextAlign.center,
+                                child: FutureBuilder<Pokemon>(
+                                  future: futurePokemon,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(
+                                        '${snapshot.data!.weight / 10} kg',
+                                        style: normalTextStyle18,
+                                        textAlign: TextAlign.center,
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Text('${snapshot.error}');
+                                    }
+
+                                    // By default, show a loading spinner.
+                                    return const CircularProgressIndicator();
+                                  },
                                 ),
                               ),
                             ],
@@ -218,20 +279,44 @@ class _PokemonDetailsState extends State<PokemonDetails> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: Text(
-                                  'Seed',
-                                  style: normalTextStyle18,
-                                  textAlign: TextAlign.center,
+                                child: FutureBuilder<Pokemon>(
+                                  future: futurePokemon,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(
+                                        snapshot.data!.pokeType.capitalize(),
+                                        style: normalTextStyle18,
+                                        textAlign: TextAlign.center,
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Text('${snapshot.error}');
+                                    }
+
+                                    // By default, show a loading spinner.
+                                    return const CircularProgressIndicator();
+                                  },
                                 ),
                               ),
                               Expanded(
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
-                                    Text(
-                                      'Overgrow',
-                                      style: normalTextStyle18,
-                                      textAlign: TextAlign.center,
+                                    FutureBuilder<Pokemon>(
+                                      future: futurePokemon,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Text(
+                                            snapshot.data!.ability.capitalize(),
+                                            style: normalTextStyle18,
+                                            textAlign: TextAlign.center,
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          return Text('${snapshot.error}');
+                                        }
+
+                                        // By default, show a loading spinner.
+                                        return const CircularProgressIndicator();
+                                      },
                                     ),
                                     const Positioned(
                                       right: 8,
@@ -578,70 +663,86 @@ class _PokemonDetailsState extends State<PokemonDetails> {
                             style: titleTextStyle,
                           ),
                         ),
-                        ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: evolutions.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  95.0, 0.0, 95.0, 10.0),
-                              child: Container(
-                                height: 280,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Container(
-                                      width: 180,
-                                      height: 220,
-                                      decoration: BoxDecoration(
-                                        color: erieBlack,
-                                        borderRadius: BorderRadius.circular(20),
-                                        boxShadow: kElevationToShadow[4],
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
+                        FutureBuilder(
+                          future: futurePokemonEvo,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: snapshot.data!.evoChain.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        95.0, 0.0, 95.0, 10.0),
+                                    child: SizedBox(
+                                      height: 280,
+                                      child: Stack(
+                                        alignment: Alignment.center,
                                         children: [
-                                          const Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                20.0, 20.0, 0.0, 0.0),
-                                            child: Text(
-                                              '#001',
-                                              style: TextStyle(
-                                                  color: white,
-                                                  fontFamily: 'Roboto',
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w400),
+                                          Container(
+                                            width: 180,
+                                            height: 220,
+                                            decoration: BoxDecoration(
+                                              color: erieBlack,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              boxShadow: kElevationToShadow[4],
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.stretch,
+                                              // ignore: sort_child_properties_last
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          20.0, 20.0, 0.0, 0.0),
+                                                  child: Text(
+                                                    generateNumber(index + 1),
+                                                    style: const TextStyle(
+                                                        color: white,
+                                                        fontFamily: 'Roboto',
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ),
+                                                // ignore: prefer_const_constructors
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          44.0, 10, 44.0, 0.0),
+                                                  child: Text(
+                                                    snapshot
+                                                        .data!.evoChain[index]
+                                                        .capitalize(),
+                                                    style: const TextStyle(
+                                                      color: white,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: const [],
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                44.0, 10, 44.0, 0.0),
-                                            child: Text(
-                                              evolutions[index],
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontFamily: 'Roboto',
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                          Row(
-                                            children: const [],
-                                          ),
+                                          Positioned(
+                                              bottom: 0,
+                                              child: Image.asset(
+                                                  'images/bulbasaur.png')),
                                         ],
                                       ),
                                     ),
-                                    Positioned(
-                                        bottom: 0,
-                                        child: Image.asset(
-                                            'images/bulbasaur.png')),
-                                  ],
-                                ),
-                              ),
-                            );
+                                  );
+                                },
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text('${snapshot.error}');
+                            }
+                            return const CircularProgressIndicator();
                           },
                         )
                       ],
@@ -760,6 +861,6 @@ class _PokemonDetailsState extends State<PokemonDetails> {
 
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

@@ -58,7 +58,7 @@ class PokemonListScreen extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: 10, // LENGTH OF LIST
+            itemCount: 1281, // LENGTH OF LIST
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
@@ -90,7 +90,7 @@ class PokemonListScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(28, 18, 0, 0),
                             child: Text(
-                              nameGenerator(1),
+                              generateNumber(index + 1),
                               style: TextStyle(
                                 color: white,
                                 fontFamily: pokemonNumberFontFamily,
@@ -101,17 +101,11 @@ class PokemonListScreen extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(35, 13, 0, 0),
-                            child: Text('Bulbasaur',
-                                style: TextStyle(
-                                  color: white,
-                                  fontFamily: pokemonNameFontFamily,
-                                  fontSize: pokemonNameFontSize,
-                                  fontWeight: pokemonNameFontWeight,
-                                )),
+                            child: generateName(index + 1),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [], // IMPORT SVG !!!
+                            children: const [], // IMPORT SVG !!!
                           ),
                         ],
                       ),
@@ -119,7 +113,7 @@ class PokemonListScreen extends StatelessWidget {
                     Positioned(
                       right: 32,
                       bottom: 44,
-                      child: Image.asset('images/bulbasaur.png'),
+                      child: generateImage(index + 1),
                     ),
                   ],
                 ),
@@ -131,9 +125,30 @@ class PokemonListScreen extends StatelessWidget {
     );
   }
 
+  FutureBuilder<Object?> generateImage(int index) {
+    late Future<Pokemon>? futurePokemon;
+    futurePokemon = fetchPokemon(index);
+    return FutureBuilder(
+      future: futurePokemon,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Positioned(
+            bottom: -50,
+            child: Image.network(
+              snapshot.data?.sprite ?? '',
+              fit: BoxFit.fill,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return const Text('Error');
+        }
+        return const CircularProgressIndicator();
+      },
+    );
+  }
+
 //   FutureBuilder<Pokemon> generateName(int index) {
   FutureBuilder<Pokemon> generateName(int index) {
-    print(index);
     late Future<Pokemon>? futurePokemon;
     futurePokemon = fetchPokemon(index);
 
@@ -141,7 +156,7 @@ class PokemonListScreen extends StatelessWidget {
       future: futurePokemon,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Text(snapshot.data!.pokeName,
+          return Text(snapshot.data!.pokeName.capitalize(),
               style: TextStyle(
                 color: white,
                 fontFamily: pokemonNameFontFamily,
@@ -159,12 +174,14 @@ class PokemonListScreen extends StatelessWidget {
   }
 }
 
-String nameGenerator(int index) {
-  var name = '#001';
-  // print('index' + index.toString());
-  // late Future<Pokemon> futurePokemon;
-  // futurePokemon = fetchPokemon(index);
-  // print('Success');
-  // futurePokemon.then((value) => print(value.pokeName));
-  return name;
+String generateNumber(int index) {
+  if (index < 10) {
+    return '#000$index';
+  } else if (index < 100) {
+    return '#00$index';
+  } else if (index < 1000) {
+    return '#0$index';
+  } else {
+    return '#$index';
+  }
 }
