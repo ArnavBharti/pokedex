@@ -34,11 +34,11 @@ Future<PokemonEvo> fetchPokemonEvo(int id) async {
   }
 }
 
-Future<Pokemon> fetchPokemonCount() async {
+Future<PokemonCount> fetchPokemonCount() async {
   final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/'));
 
   if (response.statusCode == 200) {
-    return Pokemon.fromJson(jsonDecode(response.body));
+    return PokemonCount.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to load Pokemon');
   }
