@@ -125,18 +125,21 @@ class PokemonListScreen extends StatelessWidget {
     );
   }
 
-  FutureBuilder<Object?> generateImage(int index) {
+  generateImage(int index) {
     late Future<Pokemon>? futurePokemon;
     futurePokemon = fetchPokemon(index);
     return FutureBuilder(
       future: futurePokemon,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Positioned(
-            bottom: -50,
-            child: Image.network(
-              snapshot.data?.sprite ?? '',
-              fit: BoxFit.fill,
+          return Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              width: 150.0,
+              child: Image.network(
+                snapshot.data?.sprite ?? '',
+                fit: BoxFit.fill,
+              ),
             ),
           );
         } else if (snapshot.hasError) {

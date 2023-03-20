@@ -51,18 +51,20 @@ AppBar appBar(BuildContext context) {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            IconButton(
-              color: black,
-              icon: const Icon(Icons.filter_list),
-              onPressed: () {
-                showDialog(
-                  barrierColor: Colors.transparent,
-                  context: context,
-                  builder: (context) {
-                    return const FilterBox();
-                  },
-                );
-              },
+            Material(
+              child: IconButton(
+                color: black,
+                icon: const Icon(Icons.filter_list),
+                onPressed: () {
+                  showDialog(
+                    barrierColor: Colors.transparent,
+                    context: context,
+                    builder: (context) {
+                      return const FilterBox();
+                    },
+                  );
+                },
+              ),
             ),
             Positioned(
               top: 10.0,

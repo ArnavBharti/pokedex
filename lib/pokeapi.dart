@@ -34,6 +34,16 @@ Future<PokemonEvo> fetchPokemonEvo(int id) async {
   }
 }
 
+Future<Pokemon> fetchPokemonCount() async {
+  final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/'));
+
+  if (response.statusCode == 200) {
+    return Pokemon.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to load Pokemon');
+  }
+}
+
 class PokemonEvo {
   final List<String> evoChain;
 
@@ -56,6 +66,20 @@ class PokemonEvo {
   }
 }
 
+class PokemonCount {
+  final int count;
+
+  const PokemonCount({
+    required this.count,
+  });
+
+  factory PokemonCount.fromJson(Map<String, dynamic> json) {
+    return PokemonCount(
+      count: json['count'],
+    );
+  }
+}
+
 class PokemonSpecies {
   final int captureRate;
   final String flavorText;
@@ -68,7 +92,7 @@ class PokemonSpecies {
   factory PokemonSpecies.fromJson(Map<String, dynamic> json) {
     return PokemonSpecies(
       captureRate: json['capture_rate'],
-      flavorText: json['flavor_text_entries'][0]['flavor_text'],
+      flavorText: json['flavor_text_entries'][0]['flavor_text'], 
     );
   }
 }
